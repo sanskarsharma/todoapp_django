@@ -1,0 +1,6 @@
+virtualenv/
+todo/database.cnf
+todo/db.sqlite3
+todo/todo/__pycache__/
+todo/todoapp/__pycache__/
+todo/todoapp/migrations/__pycache__/

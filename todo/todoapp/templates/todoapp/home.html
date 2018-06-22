@@ -1,0 +1,106 @@
+
+{% extends "todoapp/base.html" %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <br>
+        <p style="font-size: 24px;">Listings</p>
+    
+        <div class="row">
+        <div class="col-md-12">
+
+          <div class="col-md-8">
+            <input class="form-control" id="search_input" type="text" placeholder="Search Listings..">
+          </div>
+          <div class="col-md-2">
+              <div class="dropdown">
+                  <button type="button" id = "dropdown_text" class="btn btn-md btn-primary dropdown-toggle" data-toggle="dropdown">
+                  All Locations
+                  </button>
+                  <div class="dropdown-menu">
+                      <a class="dropdown-item" href="#">San Jose, CA</a>
+                      <a class="dropdown-item" href="#">Banglore, IN</a>
+                      <a class="dropdown-item" href="#">Raipur, IN</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">All Locations</a>
+                      <a class="dropdown-item" href="#">FB City</a>
+        
+                    </div>
+                </div>
+          </div>
+          <div class="col-md-2" align="end">
+            <button class="btn" id="add_task_btn" data-toggle="modal" data-target="#add_task_modal"  >Add Task</button>
+          </div>
+
+        </div> 
+        </div>
+
+
+
+    </div>
+
+
+
+    {% if todo_list %}
+    <ul>
+    {% for todo in todo_list %}
+        <li><a href="#">{{ todo }}</a></li>
+    {% endfor %}
+    </ul>
+    {% else %}
+    <p>No tasks to do.</p>
+    {% endif %}
+
+    
+
+
+</div>
+
+
+
+<!-- modal add task here  -->
+
+<div id="add_task_modal" class="modal fade" >
+        <div class="modal-dialog  ">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">
+                            About this app
+                        </h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        This is an app for managing primary information of Facebook Pages of any FB user account.
+                        <br>
+                        It is made upon python Django framework and uses Bootstrap-4 with jQuery on the frontend.
+                        <br>
+                        Facebook's Graph API and Javascript SDK are used to connect to facebook.
+                        <br>
+                        This app does not log any user or page data, infact it does not uses a database.
+                        <br>
+                        Developed by <a href="https://github.com/sanskarsharma">sanskarsharma</a>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+
+                </div>
+
+        </div>
+    </div>
+
+
+
+
+
+
+
+{% endblock %}
