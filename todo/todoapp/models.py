@@ -26,3 +26,8 @@ class Task(models.Model):
     
     class Meta:
         ordering = ['due_date']
+
+class SubTask(models.Model):
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    title = models.CharField(max_length=200)
+    

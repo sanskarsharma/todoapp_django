@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, authenticate
 
-from .models import Task
+from .models import Task, SubTask
 import datetime
 from dateutil import parser as date_parser
 import json
@@ -18,7 +18,18 @@ from django.views.decorators.csrf import csrf_exempt
 
 @login_required
 def home(request):
-    todo_list = Task.objects.filter(user=request.user, is_deleted=False)
+    filter_type = request.GET.get("filter", "")
+    if filter_type == "today":
+        todo_list = Task.objects.filter(user=request.user, is_deleted=False, due_date=datetime.date.today())
+    elif filter_type == "this_week":
+        a = 1
+    elif filter_type == "next_week":
+        a = d
+    elif filter_type == "overdue":
+        todo_list = Task.objects.filter(user=request.user, is_deleted=False, is_completed=False)
+    else:
+        todo_list = Task.objects.filter(user=request.user, is_deleted=False)
+    
     context = {
         'title': 'Todo-App',
         'todo_list': todo_list
@@ -48,12 +59,7 @@ def add_task(request):
 
 
 @login_required
-def show_task(request):
-    return HttpResponse("Hi")
-
-
-@login_required
-def mark_task_completed(request):
+def mark_task(request):
     response_dict = {}
     if request.method == "POST":
         task_id = request.POST.get("id","")
@@ -62,9 +68,12 @@ def mark_task_completed(request):
             response_dict["status"] = "FAIL"
             response_dict["error"] = "TASK_DOES_NOT_EXIST"
         else:
-            if task.is_completed == False:
+            is_completed = request.POST.get("is_completed")
+            if is_completed and not task.is_completed:
                 task.is_completed = True
-                task.save()
+            else:
+                task.is_completed = False
+            task.save()
             response_dict["status"] = "OK"
     else:
         response_dict["status"] = "FAIL"
@@ -72,6 +81,33 @@ def mark_task_completed(request):
     return HttpResponse(json.dumps(response_dict))
 
 
+
+@login_required
+def add_sub_task(request):
+    response_dict = {}
+    if request.method == "POST":
+        task_id = request.POST.get("task_id", "")
+        user = request.user
+        task = Task.objects.filter(id=task_id, user=request.user, is_deleted=False).first()
+        if task is None :
+            response_dict["status"] = "FAIL"
+            response_dict["error"] = "TASK_DOES_NOT_EXIST"
+        else:
+            if request.POST.get("multiple") == True :
+                sub_tasks = request.POST.get("sub_tasks", "")
+                for each in sub_tasks:
+                    sub_task = SubTask(task= task, title= each["title"])
+                    sub_task.save()
+                response_dict["status"] = "OK"
+            else:
+                sub_task = request.POST.get("sub_task", "")
+                sub_task_obj = SubTask(task= task, title= sub_task["title"])
+                sub_task_obj.save()
+                response_dict["status"] = "OK"
+    else:
+        response_dict["status"] = "FAIL"
+        response_dict["error"] = "BAD_METHOD"
+    return HttpResponse(json.dumps(response_dict))
             
 
 
