@@ -17,7 +17,7 @@ class Task(models.Model):
     deleted_at = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        return self.title
  
     def soft_delete(self):
         self.is_deleted = True

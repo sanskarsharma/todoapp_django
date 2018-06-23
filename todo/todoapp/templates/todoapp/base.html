@@ -12,6 +12,10 @@
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.js"></script>
+
+
     <title> 
         {%  if title %}
         {{title}}
@@ -63,11 +67,149 @@
 
             });
 
+            function isValidDate(s) {
+                var bits = s.split('-');
+                var d = new Date(bits[0], bits[1] - 1, bits[2]);
+                return d && (d.getMonth() + 1) == bits[1];
+            }
+            function isValidDate2(s) {
+                var bits = s.split('/');
+                var y = bits[2],
+                    m = bits[1],
+                    d = bits[0];
+                // Assume not leap year by default (note zero index for Jan)
+                var daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
-        });
+                // If evenly divisible by 4 and not evenly divisible by 100,
+                // or is evenly divisible by 400, then a leap year
+                if ((!(y % 4) && y % 100) || !(y % 400)) {
+                    daysInMonth[1] = 29;
+                }
+                return !(/\D/.test(String(d))) && d > 0 && d <= daysInMonth[--m]
+            }
 
-    
-    
+
+            $("#add_task_submit").click(function(){
+
+                d= {}
+                flag = 1
+                if(document.getElementById("title_inp").value != "")
+                {
+                    console.log(document.getElementById("title_inp").value)
+                    d["title"]= document.getElementById("title_inp").value;
+                    
+                }else{
+                    $.alert('Please enter a title', 'Invalid Input');
+                    flag=0;
+                }
+
+                var due_date = document.getElementById("due_date_inp").value
+                if(due_date != "")
+                {
+                    if(isValidDate(due_date)){
+                        var bits = due_date.split('-');
+                        var da = new Date(bits[0], bits[1] - 1, bits[2]);
+                        console.log(da);
+                        d['due_date']= da ;
+                    }else{
+                        $.alert("Inavlid date", "Enter valid Date")
+                        flag=0;
+                    }
+
+                   
+                }else{
+                    flag=0;
+                }
+                //console.log(document.getElementById("due_date_inp").value);
+                
+                if(flag==1){
+
+
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        console.log(this.responseText);
+                        var res=JSON.parse(this.responseText);
+                        if(res["status"] == "OK"){
+                            $('#add_task_modal').modal('hide');
+                            $.confirm({
+                                title: 'Task Added!',
+                                content: 'Your task was added successfully!',
+                                buttons: {
+                                    Okay: function () {
+                                        location.reload(true);
+                                    }
+                                }
+                            });
+                        }
+
+                    }
+                    };
+                    var parm='title='+ d['title'] + '&due_date=' + d['due_date'] + '&csrfmiddlewaretoken=' + '{{csrf_token}}';
+                    xhttp.open("POST", "/todo/add_task", false);
+                    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                    xhttp.send(parm);
+
+
+
+
+
+                }else{
+                    console.log("REQUEST FAILED... INVALID DATA")
+                }
+
+
+
+
+            });
+
+            $(function(){
+                $('[type="date"]').prop('min', function(){
+                    return new Date().toJSON().split('T')[0];
+                });
+            });
+
+            $(".markdone").click(function(){
+
+                var task_id = $(this).attr("id")
+                console.log("MARK DONNE "+ task_id)
+
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log(this.responseText);
+                    var res=JSON.parse(this.responseText);
+                    if(res["status"] == "OK"){
+                        $.confirm({
+                            title: 'Task marked as Completed!',
+                            content: 'Your task was marked completed successfully!',
+                            buttons: {
+                                Okay: function () {
+                                    location.reload(true);
+                                }
+                            }
+                        });
+                    }
+
+                }
+                };
+                var parm='id='+ task_id + '&csrfmiddlewaretoken=' + '{{csrf_token}}';
+                xhttp.open("POST", "/todo/mark_completed", false);
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send(parm);
+
+
+
+
+
+
+            });
+
+
+
+
+
+        });   
     
     </script>
     

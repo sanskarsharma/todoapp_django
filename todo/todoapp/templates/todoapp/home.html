@@ -41,17 +41,80 @@
 
     </div>
 
+    <br>
 
+    <!-- -------------- accordion below ------------- -->
 
     {% if todo_list %}
-    <ul>
-    {% for todo in todo_list %}
-        <li><a href="#">{{ todo }}</a></li>
+    
+    <div class="panel-group" id="accordion">
+
+        {% for todo in todo_list %}
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-6">
+                       <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{forloop.counter}}">
+                            {{ todo.title }}
+                        </a>
+                       </h4>
+                    </div>
+                    <div class=" row col-md-6" align="end">
+                        {% if todo.is_completed %}
+                        <a >Completed</a>
+                        <a >Due date was : {{ todo.due_date }}</a>
+                        {% else %}
+                        <a >Pending</a>
+                        <a >Due on : {{ todo.due_date }}</a>
+                        {% endif %}
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            <div id="collapse{{forloop.counter}}" class="panel-collapse collapse">
+                <div class="panel-body">
+
+                </div>
+                <div class="panel-footer">
+                    {% if not todo.is_completed %}
+                    <button class="btn markdone" id="{{todo.id}}">Mark Complete</button>
+                    {% else %}
+                    <a>Task Done</a>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+        <br>
+    
     {% endfor %}
-    </ul>
+    </div>
     {% else %}
     <p>No tasks to do.</p>
     {% endif %}
+
+
+
+        
+
+
+
+
+
+
+<!-- 
+    {% if todo_list %}
+    
+    {% for todo in todo_list %}
+        <a href="#">{{ todo }}</a>
+    {% endfor %}
+    {% else %}
+    <p>No tasks to do.</p>
+    {% endif %} -->
 
     
 
@@ -63,35 +126,55 @@
 <!-- modal add task here  -->
 
 <div id="add_task_modal" class="modal fade" >
-        <div class="modal-dialog  ">
+        <div class="modal-dialog">
                 <div class="modal-content">
 
-                    <!-- Modal Header -->
+
+
                     <div class="modal-header">
-                        <h4 class="modal-title">
-                            About this app
-                        </h4>
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Add new task</h4>
                     </div>
 
-                    <!-- Modal body -->
                     <div class="modal-body">
-                        This is an app for managing primary information of Facebook Pages of any FB user account.
-                        <br>
-                        It is made upon python Django framework and uses Bootstrap-4 with jQuery on the frontend.
-                        <br>
-                        Facebook's Graph API and Javascript SDK are used to connect to facebook.
-                        <br>
-                        This app does not log any user or page data, infact it does not uses a database.
-                        <br>
-                        Developed by <a href="https://github.com/sanskarsharma">sanskarsharma</a>
+
+
+
+                        <form id="updateData" action="/updatePageDetals" method="post">
+                    
+                            <div class="row">
+                                <div class="input-field col-md-12">
+                                    <label for="title_inp">Task Title : </label>
+                                    <input  id="title_inp" type="text" class=" form-control validate" placeholder="Enter Task Title">
+                                </div>
+                            </div>
+                                
+                            <br>
+                                
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="input-field inline">
+                                        <label for="due_date_inp" >Due date : </label>
+                                    <input  id="due_date_inp" type="date" class=" form-control validate" placeholder="Due date for task">
+                                    </div>
+                                </div>
+                            </div>                  
+                    
+
+                            <input id="id" type="text" class="validate" hidden>
+                            <input id="pageToken" type="text" hidden>
+                        
+                        </form>   
+
+
+
                     </div>
 
-                    <!-- Modal footer -->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button type="button" id="add_task_submit" class="btn btn-default">Submit</button>
                     </div>
 
+                   
                 </div>
 
         </div>
