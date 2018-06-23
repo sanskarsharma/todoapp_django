@@ -25,7 +25,7 @@ SECRET_KEY = 'mtmbj^g-f!0)tme^_3r31&@v=x((p3ro*54g&!9e1q%x_uo(&x'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["todolist.pythonanywhere.com","127.0.0.1"]
 
 
 # Application definition

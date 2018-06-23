@@ -60,6 +60,22 @@
     <script type="text/JavaScript">
     
         $(document).ready(function(){
+
+            //  $("#search_input").on("keyup", function() {
+            //     var value = $(this).val().toLowerCase();
+            //     $("#accordion div").filter(function() {
+            //     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            //     });
+            // });
+
+            $("#search_input").on("keyup",function() {
+            var searchText = $(this).val().trim().toLowerCase();
+            $(".panel-group").find("a").each(function(i, elem) {
+                if ($(this).text().trim().toLowerCase() == searchText) {
+                $(this).closest(".panel-collapse .collapse").filter(":not(.in)").prev(".panel-heading").find("a[data-toggle='collapse']").click();
+                }
+                });
+            });
             
             $("#add_task_btn").click(function(){
 
