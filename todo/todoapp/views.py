@@ -68,8 +68,10 @@ def mark_task(request):
             response_dict["status"] = "FAIL"
             response_dict["error"] = "TASK_DOES_NOT_EXIST"
         else:
-            is_completed = request.POST.get("is_completed")
-            if is_completed and not task.is_completed:
+            is_completed = request.POST.get("is_completed","FALSE")
+            # print(type(is_completed)) --> always str
+            # print(is_completed) 
+            if is_completed=="TRUE" and not task.is_completed:
                 task.is_completed = True
             else:
                 task.is_completed = False
@@ -93,7 +95,7 @@ def add_sub_task(request):
             response_dict["status"] = "FAIL"
             response_dict["error"] = "TASK_DOES_NOT_EXIST"
         else:
-            if request.POST.get("multiple") == True :
+            if request.POST.get("multiple", "TRUE") == "TRUE" :
                 sub_tasks = request.POST.get("sub_tasks", "")
                 for each in sub_tasks:
                     sub_task = SubTask(task= task, title= each["title"])

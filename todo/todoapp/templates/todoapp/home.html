@@ -7,7 +7,7 @@
     <div class="row">
         <br>
         <p style="font-size: 24px;">Tasks</p>
-    
+
         <div class="row">
         <div class="col-md-12">
 
@@ -15,13 +15,13 @@
             <input class="form-control" id="search_input" type="text" placeholder="Search Tasks ...">
           </div>
           <div class="col-md-2">
-              
+
           </div>
           <div class="col-md-2" align="end">
             <button class="btn" id="add_task_btn" data-toggle="modal" data-target="#add_task_modal"  >Add Task</button>
           </div>
 
-        </div> 
+        </div>
         </div>
 
 
@@ -33,16 +33,16 @@
     <!-- -------------- accordion below ------------- -->
 
     {% if todo_list %}
-    
+
     <div class="panel-group" id="accordion">
 
         {% for todo in todo_list %}
 
-        <div class="panel panel-default">
+        <div class="panel panel-default" id="hey{{forloop.counter}}">
             <div class="panel-heading">
                 <div class="row">
                 <div class="col-md-12">
-                    <div class="col-md-6">
+                    <div class="col-md-6 panel2" id="hey{{forloop.counter}}_title">
                        <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{forloop.counter}}">
                             {{ todo.title }}
@@ -68,16 +68,16 @@
                 </div>
                 <div class="panel-footer">
                     {% if not todo.is_completed %}
-                    <button class="btn markdone" id="{{todo.id}}">Mark Complete</button>
+                    <button class="btn marktask" id="done_{{todo.id}}">Mark Complete</button>
                     {% else %}
-                    <a>Task Done</a>
+                    Task Done. <a class="marktask" id="undone_{{todo.id}}" href="#">Mark as Pending</a>
                     {% endif %}
                 </div>
 
             </div>
         </div>
         <br>
-    
+
     {% endfor %}
     </div>
     {% else %}
@@ -86,16 +86,16 @@
 
 
 
-        
 
 
 
 
 
 
-<!-- 
+
+<!--
     {% if todo_list %}
-    
+
     {% for todo in todo_list %}
         <a href="#">{{ todo }}</a>
     {% endfor %}
@@ -103,7 +103,7 @@
     <p>No tasks to do.</p>
     {% endif %} -->
 
-    
+
 
 
 </div>
@@ -128,16 +128,16 @@
 
 
                         <form id="updateData" action="/updatePageDetals" method="post">
-                    
+
                             <div class="row">
                                 <div class="input-field col-md-12">
                                     <label for="title_inp">Task Title : </label>
                                     <input  id="title_inp" type="text" class=" form-control validate" placeholder="Enter Task Title">
                                 </div>
                             </div>
-                                
+
                             <br>
-                                
+
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="input-field inline">
@@ -145,13 +145,13 @@
                                     <input  id="due_date_inp" type="date" class=" form-control validate" placeholder="Due date for task">
                                     </div>
                                 </div>
-                            </div>                  
-                    
+                            </div>
+
 
                             <input id="id" type="text" class="validate" hidden>
                             <input id="pageToken" type="text" hidden>
-                        
-                        </form>   
+
+                        </form>
 
 
 
@@ -161,7 +161,7 @@
                         <button type="button" id="add_task_submit" class="btn btn-default">Submit</button>
                     </div>
 
-                   
+
                 </div>
 
         </div>

@@ -16,7 +16,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.js"></script>
 
 
-    <title> 
+    <title>
         {%  if title %}
         {{title}}
         {% else %}
@@ -58,7 +58,7 @@
     {% endblock %}
 
     <script type="text/JavaScript">
-    
+
         $(document).ready(function(){
 
             //  $("#search_input").on("keyup", function() {
@@ -68,15 +68,43 @@
             //     });
             // });
 
-            $("#search_input").on("keyup",function() {
-            var searchText = $(this).val().trim().toLowerCase();
-            $(".panel-group").find("a").each(function(i, elem) {
-                if ($(this).text().trim().toLowerCase() == searchText) {
-                $(this).closest(".panel-collapse .collapse").filter(":not(.in)").prev(".panel-heading").find("a[data-toggle='collapse']").click();
-                }
+            // $("#search_input").on("keyup",function() {
+            // var searchText = $(this).val().trim().toLowerCase();
+            // $(".panel-group").find("a").each(function(i, elem) {
+            //     if ($(this).text().trim().toLowerCase() == searchText) {
+            //     $(this).closest(".panel-collapse .collapse").filter(":not(.in)").prev(".panel-heading").find("a[data-toggle='collapse']").click();
+            //     }
+            //     });
+            // });
+
+            var searchTerm, panelContainerId;
+            // Create a new contains that is case insensitive
+              $.expr[':'].containsCaseInsensitive = function (n, i, m) {
+
+                return jQuery(n).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
+
+              };
+
+              $('#search_input').on('change keyup paste click', function () {
+                searchTerm = $(this).val();
+                // console.log(searchTerm);
+                $('#accordion > .panel').each(function () {
+                  panelContainerId = '#' + $(this).attr('id');
+                //   console.log(panelContainerId);
+                 // console.log(panelContainerId + ':not(:containsCaseInsensitive(' + searchTerm + '))');
+                  var titleText = $(panelContainerId +'_title').text();
+                //   console.log(titleText);
+                  if(titleText.toLowerCase().search(searchTerm.toLowerCase())==-1)
+                  {
+                      $(panelContainerId).hide();
+                  }
+                  else
+                  {
+                      $(panelContainerId).show();
+                  }
                 });
-            });
-            
+              });
+
             $("#add_task_btn").click(function(){
 
                 console.log("ADD TASK CLICKEDD")
@@ -113,7 +141,7 @@
                 {
                     console.log(document.getElementById("title_inp").value)
                     d["title"]= document.getElementById("title_inp").value;
-                    
+
                 }else{
                     $.alert('Please enter a title', 'Invalid Input');
                     flag=0;
@@ -132,12 +160,12 @@
                         flag=0;
                     }
 
-                   
+
                 }else{
                     flag=0;
                 }
                 //console.log(document.getElementById("due_date_inp").value);
-                
+
                 if(flag==1){
 
 
@@ -185,10 +213,20 @@
                 });
             });
 
-            $(".markdone").click(function(){
+            $(".marktask").click(function(){
 
-                var task_id = $(this).attr("id")
-                console.log("MARK DONNE "+ task_id)
+                var view_id = $(this).attr("id")
+                console.log("MARK TASK VIEW ID "+ view_id)
+                
+                var action = view_id.split("_")[0]
+                var task_id = view_id.split("_")[1]
+                console.log("MARK TASK ID "+ task_id)
+
+                var is_completed = "FALSE"
+                if(action=="done"){
+                    is_completed = "TRUE"
+                }
+                
 
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
@@ -196,21 +234,34 @@
                     console.log(this.responseText);
                     var res=JSON.parse(this.responseText);
                     if(res["status"] == "OK"){
-                        $.confirm({
-                            title: 'Task marked as Completed!',
-                            content: 'Your task was marked completed successfully!',
-                            buttons: {
-                                Okay: function () {
-                                    location.reload(true);
+                        if(is_completed=="TRUE"){
+                            $.confirm({
+                                title: 'Task marked as Completed!',
+                                content: 'Your task was marked completed successfully!',
+                                buttons: {
+                                    Okay: function () {
+                                        location.reload(true);
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }else{
+                            $.confirm({
+                                title: 'Task marked as Pending!',
+                                content: 'Your task was marked as pending !',
+                                buttons: {
+                                    Okay: function () {
+                                        location.reload(true);
+                                    }
+                                }
+                            });
+                        }
+                        
                     }
 
                 }
                 };
-                var parm='id='+ task_id + '&csrfmiddlewaretoken=' + '{{csrf_token}}';
-                xhttp.open("POST", "/todo/mark_completed", false);
+                var parm='id='+ task_id +'&is_completed='+ is_completed + '&csrfmiddlewaretoken=' + '{{csrf_token}}';
+                xhttp.open("POST", "{% url 'todoapp:mark_task' %}", false);
                 xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xhttp.send(parm);
 
@@ -225,10 +276,10 @@
 
 
 
-        });   
-    
+        });
+
     </script>
-    
+
 
     <div class="container">
         <div class="row">
@@ -241,7 +292,7 @@
             </div>
         </div>
     </div>
-    
-    
+
+
 </body>
 </html>
