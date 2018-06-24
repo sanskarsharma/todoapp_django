@@ -97,7 +97,9 @@ def add_sub_task(request):
         else:
             if request.POST.get("multiple", "TRUE") == "TRUE" :
                 sub_tasks = request.POST.get("sub_tasks", "")
-                for each in sub_tasks:
+                for each in json.loads(sub_tasks):
+                    # print(each)
+                    # print(type(each))
                     sub_task = SubTask(task= task, title= each["title"])
                     sub_task.save()
                 response_dict["status"] = "OK"

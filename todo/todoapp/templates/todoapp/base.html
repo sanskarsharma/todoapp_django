@@ -266,10 +266,102 @@
                 xhttp.send(parm);
 
 
+            });  // (.marktask) function ends
+
+
+            // js for SUB-TASK modal below
+
+            $(".addsubtask").click(function(){
+                console.log($(this).attr("id"))
+                document.getElementById("task_id_for_subtask").value = $(this).attr("id");
+            });
+
+            var max_fields      = 10;
+            var wrapper         = $(".input_fields_wrap"); 
+            var add_button      = $(".add_field_button");
+            var remove_button   = $(".remove_field_button");
+            var submit_button   = $("#add_sub_task_submit");
+
+            $(add_button).click(function(e){
+                e.preventDefault();
+                var total_fields = wrapper[0].childNodes.length;
+                var row = '<input type="text" name="answer[]" class="field-long form-control" placeholder="Enter sub-task ..." />';
+                if(total_fields < max_fields){
+                    $(wrapper).append(row);
+                }
+            });
+            $(remove_button).click(function(e){
+                e.preventDefault();
+                var total_fields = wrapper[0].childNodes.length;
+                if(total_fields>1){
+                    wrapper[0].childNodes[total_fields-1].remove();
+                }
+            });
+
+            $(submit_button).click(function(){
+                var answer = [];
+                flag = 0;
+                $('input[name^="answer"]').each(function() {
+                    input_value = $(this).val()
+                    if(input_value == "" || input_value.length <1){
+                        $.alert("Sub task field empty", "Invalid input");
+                        flag=1;
+                    }
+                    sub_task = {};
+                    sub_task["title"] = input_value;
+                    answer.push(sub_task);
+                });
+                if( flag == 0){
+                    console.log(answer)
+
+                    // send to server
+
+                    task_id_for_subtask = document.getElementById("task_id_for_subtask").value ;
+
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        console.log(this.responseText);
+                        var res=JSON.parse(this.responseText);
+                        if(res["status"] == "OK"){
+                            $(submit_button).modal('hide');
+                            $.confirm({
+                                title: 'Sub tasks Added!',
+                                content: 'Your sub-tasks were added successfully!',
+                                buttons: {
+                                    Okay: function () {
+                                        location.reload(true);
+                                    }
+                                }
+                            });
+                        }
+
+                    }
+                    };
+                    var parm='task_id='+ task_id_for_subtask + '&multiple=TRUE' + '&sub_tasks='+ JSON.stringify(answer) + '&csrfmiddlewaretoken=' + '{{csrf_token}}';
+                    xhttp.open("POST", "{% url 'todoapp:add_sub_task'  %}", false);
+                    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                    xhttp.send(parm);
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+                }
+                else{
+                    console.log("WRAAAAAAAAAANG");
+                    
+                }
             });
 
 
