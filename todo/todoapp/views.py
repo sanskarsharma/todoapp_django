@@ -22,9 +22,9 @@ def home(request):
     if filter_type == "today":
         todo_list = Task.objects.filter(user=request.user, is_deleted=False, due_date=datetime.date.today())
     elif filter_type == "this_week":
-        a = 1
+        todo_list = Task.objects.filter(user=request.user, is_deleted=False, due_date=datetime.date.today())
     elif filter_type == "next_week":
-        a = d
+        todo_list = Task.objects.filter(user=request.user, is_deleted=False, due_date=datetime.date.today())
     elif filter_type == "overdue":
         todo_list = Task.objects.filter(user=request.user, is_deleted=False, is_completed=False)
     else:
@@ -114,6 +114,21 @@ def add_sub_task(request):
     return HttpResponse(json.dumps(response_dict))
             
 
-
-
-    
+@login_required
+def delete_task(request):
+    response_dict = {}
+    if request.method == "POST":
+        task_id = request.POST.get("id","")
+        task = Task.objects.filter(id=task_id, user=request.user, is_deleted=False).first()
+        if task is None :
+            response_dict["status"] = "FAIL"
+            response_dict["error"] = "TASK_DOES_NOT_EXIST"
+        else:
+            task.soft_delete()
+            task.save()
+            response_dict["status"] = "OK"
+    else:
+        response_dict["status"] = "FAIL"
+        response_dict["error"] = "BAD_METHOD"
+    return HttpResponse(json.dumps(response_dict))
+        

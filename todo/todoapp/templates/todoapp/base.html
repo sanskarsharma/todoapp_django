@@ -79,7 +79,7 @@
             // });
 
 
-            var storedValue = localStorage.getItem('dropdownselected') || 'All';
+            var storedValue = sessionStorage.getItem('dropdownselected') || 'All';
             document.getElementById("dropdown_text").innerHTML = storedValue;
             
 
@@ -87,16 +87,16 @@
                 console.log("dropdown clickEEEEEEEEEDDD");
                 var text = $(this).text();
                 console.log(text);
+                
+                sessionStorage.setItem('dropdownselected', text );
 
-                if(text== "All"){
-                    
-
-                }else{
-                    localStorage.setItem('dropdownselected', text );
-                    // now reload and all this code runs again
-                    window.location.href = window.location.href.replace( /[\?#].*|$/, "?filter="+text );
-                    //location.reload();
-                }
+                // if(text== "All"){
+                // }else{
+                //     localStorage.setItem('dropdownselected', text );
+                //     // now reload and all this code runs again
+                //     window.location.href = window.location.href.replace( /[\?#].*|$/, "?filter="+text );
+                //     //location.reload();
+                // }
                 
 
             });
@@ -107,6 +107,36 @@
 
                 var task_id = $(this).attr("id");
                 console.log(task_id + "TOOO BEE DELETDDDDD")
+
+                var xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        console.log(this.responseText);
+                        var res=JSON.parse(this.responseText);
+                        if(res["status"] == "OK"){
+                            $('#add_task_modal').modal('hide');
+                            $.confirm({
+                                title: 'Task Deleted!',
+                                content: 'Your task was deleted successfully!',
+                                buttons: {
+                                    Okay: function () {
+                                        location.reload(true);
+                                    }
+                                }
+                            });
+                        }
+
+                    }
+                    };
+                    var parm='id='+ task_id + '&csrfmiddlewaretoken=' + '{{csrf_token}}';
+                    xhttp.open("POST", "{% url 'todoapp:delete_task' %}", false);
+                    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                    xhttp.send(parm);
+
+
+
+
+
 
             });
 
@@ -319,7 +349,7 @@
             $(add_button).click(function(e){
                 e.preventDefault();
                 var total_fields = wrapper[0].childNodes.length;
-                var row = '<input type="text" name="answer[]" class="field-long form-control" placeholder="Enter sub-task ..." />';
+                var row = '<input type="text" name="answer[]" class="field-long form-control" placeholder="Enter sub-task ..." maxlength="198" />';
                 if(total_fields < max_fields){
                     $(wrapper).append(row);
                 }
@@ -376,17 +406,6 @@
                     xhttp.open("POST", "{% url 'todoapp:add_sub_task'  %}", false);
                     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                     xhttp.send(parm);
-
-
-
-
-
-
-
-
-
-
-
 
 
 

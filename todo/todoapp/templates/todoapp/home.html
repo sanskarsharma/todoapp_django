@@ -22,9 +22,11 @@
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="">All</a></li>
-                        <li><a class="dropdown-item" href="">today</a></li>
-                        <li><a class="dropdown-item" href="">overdue</a></li>
+                        <li><a class="dropdown-item" href="?filter=All">All</a></li>
+                        <li><a class="dropdown-item" href="?filter=today">Today</a></li>
+                        <li><a class="dropdown-item" href="?filter=overdue">Overdue</a></li>
+                        <li><a class="dropdown-item" href="?filter=this_week">This week</a></li>
+                        <li><a class="dropdown-item" href="?filter=next_week">Next week</a></li>
                     </ul>
             </div>
 
@@ -149,12 +151,12 @@
 
 
 
-                        <form id="updateData" action="/updatePageDetals" method="post">
+                        <form id="" action="/" method="post">
 
                             <div class="row">
                                 <div class="input-field col-md-12">
                                     <label for="title_inp">Task Title : </label>
-                                    <input  id="title_inp" type="text" class=" form-control validate" placeholder="Enter Task Title">
+                                    <input  id="title_inp" type="text" class=" form-control validate" placeholder="Enter Task Title" maxlength="198">
                                 </div>
                             </div>
 
@@ -207,7 +209,7 @@
 
                     <p>Sub-tasks :</p>
                     <div class="input_fields_wrap">
-                        <input type="text" name="answer[]" class="field-long form-control" placeholder="Enter sub-task ..." />
+                        <input type="text" name="answer[]" class="field-long form-control" placeholder="Enter sub-task ..." maxlength="198"/>
                     </div>
 
                     <br>
