@@ -16,8 +16,22 @@
           </div>
           <div class="col-md-2">
 
+            <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" >
+                        <span id="dropdown_text" type= "text"></span> 
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="">All</a></li>
+                        <li><a class="dropdown-item" href="">today</a></li>
+                        <li><a class="dropdown-item" href="">overdue</a></li>
+                    </ul>
+            </div>
+
+
           </div>
-          <div class="col-md-2" align="end">
+
+          <div class="col-md-2" align="">
             <button class="btn" id="add_task_btn" data-toggle="modal" data-target="#add_task_modal"  >Add Task</button>
           </div>
 
@@ -39,12 +53,12 @@
         {% for todo in todo_list %}
 
         <div class="panel panel-default" id="hey{{forloop.counter}}">
-            <div class="panel-heading">
+            <div class="panel-heading" {% if todo.is_completed %} style="background:#e9e6e6;" {% endif %} >
                 <div class="row">
                 <div class="col-md-12">
                     <div class="col-md-6 panel2" id="hey{{forloop.counter}}_title">
-                       <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{forloop.counter}}">
+                       <h4 class="panel-title"  >
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{forloop.counter}}"  {% if todo.is_completed %} style="color:#807e7eda;" {% endif %}   >
                             {{ todo.title }}
                         </a>
                        </h4>
@@ -71,12 +85,15 @@
                     </ul>
                     <button class="btn btn-sm addsubtask" id="{{todo.id}}" data-toggle="modal" data-target="#add_sub_task_modal">Add Sub-tasks</button>
                 </div>
-                <div class="panel-footer">
+                <div class="panel-footer" align="end">
                     {% if not todo.is_completed %}
-                    <button class="btn marktask" id="done_{{todo.id}}">Mark Complete</button>
+                    <button class="btn btn-success marktask" id="done_{{todo.id}}">Mark Complete</button>
                     {% else %}
                     Task Done. <a class="marktask" id="undone_{{todo.id}}" href="#">Mark as Pending</a>
                     {% endif %}
+                    <button class="btn btn-danger deletetask" id="{{todo.id}}"><i class="fa fa-trash" aria-hidden="true" style="font-size:18px;"></i></button>
+                    
+
                 </div>
 
             </div>

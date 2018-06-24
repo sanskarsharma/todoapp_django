@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.js"></script>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <title>
         {%  if title %}
@@ -76,6 +77,39 @@
             //     }
             //     });
             // });
+
+
+            var storedValue = localStorage.getItem('dropdownselected') || 'All';
+            document.getElementById("dropdown_text").innerHTML = storedValue;
+            
+
+            $(".dropdown-item").click(function(){
+                console.log("dropdown clickEEEEEEEEEDDD");
+                var text = $(this).text();
+                console.log(text);
+
+                if(text== "All"){
+                    
+
+                }else{
+                    localStorage.setItem('dropdownselected', text );
+                    // now reload and all this code runs again
+                    window.location.href = window.location.href.replace( /[\?#].*|$/, "?filter="+text );
+                    //location.reload();
+                }
+                
+
+            });
+
+
+
+            $(".deletetask").click(function(){
+
+                var task_id = $(this).attr("id");
+                console.log(task_id + "TOOO BEE DELETDDDDD")
+
+            });
+
 
             var searchTerm, panelContainerId;
             // Create a new contains that is case insensitive
