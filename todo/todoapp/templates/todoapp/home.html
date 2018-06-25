@@ -14,7 +14,12 @@
           <div class="col-md-8">
             <input class="form-control" id="search_input" type="text" placeholder="Search Tasks ...">
           </div>
-          <div class="col-md-2">
+
+          <div class="col-md-1" align="">
+                <button class="btn" id="add_task_btn" data-toggle="modal" data-target="#add_task_modal"  >Add Task</button>
+              </div>
+
+          <div class="col-md-1">
 
             <div class="dropdown">
                     <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" >
@@ -33,9 +38,6 @@
 
           </div>
 
-          <div class="col-md-2" align="">
-            <button class="btn" id="add_task_btn" data-toggle="modal" data-target="#add_task_modal"  >Add Task</button>
-          </div>
 
         </div>
         </div>
@@ -67,11 +69,11 @@
                     </div>
                     <div class=" row col-md-6" align="end">
                         {% if todo.is_completed %}
-                        <a >Completed</a>
-                        <a >Due date was : {{ todo.due_date }}</a>
+                        <span class="label label-default">Completed</span>
+                        <span class="label label-default">{{ todo.due_date }}</span>
                         {% else %}
-                        <a >Pending</a>
-                        <a >Due on : {{ todo.due_date }}</a>
+                        <span class="label label-success">Pending</span>
+                        <span class="label label-success">{{ todo.due_date }}</span>
                         {% endif %}
                     </div>
                 </div>
@@ -80,11 +82,15 @@
 
             <div id="collapse{{forloop.counter}}" class="panel-collapse collapse">
                 <div class="panel-body">
+                    {% if todo.subtask_set.all %}
                     <ul>
                        {% for subt in todo.subtask_set.all %}
                        <li>{{subt.title}}</li>
                        {% endfor %}
                     </ul>
+                    {% else %}
+                    <p>No sub-tasks to show.</p>
+                    {% endif %}
                     <button class="btn btn-sm addsubtask" id="{{todo.id}}" data-toggle="modal" data-target="#add_sub_task_modal">Add Sub-tasks</button>
                 </div>
                 <div class="panel-footer" align="end">
