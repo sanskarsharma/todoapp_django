@@ -60,14 +60,21 @@
             <div class="panel-heading" {% if todo.is_completed %} style="background:#e9e6e6;" {% endif %} >
                 <div class="row">
                 <div class="col-md-12">
-                    <div class="col-md-6 panel2" id="hey{{forloop.counter}}_title">
+                    <div class="col-md-8 panel2" id="hey{{forloop.counter}}_title">
                        <h4 class="panel-title"  >
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{forloop.counter}}"  {% if todo.is_completed %} style="color:#807e7eda;" {% endif %}   >
-                            {{ todo.title }}
+                            <strong>{{ todo.title }}</strong>                              
                         </a>
+                        
                        </h4>
+                        
                     </div>
-                    <div class=" row col-md-6" align="end">
+                    <div class="col-md-1">
+                        {% if todo.subtask_set.all %}
+                        <span class="label label-warning">{{todo.subtask_set.count}} subtasks</span>
+                        {% endif %}
+                    </div>
+                    <div class=" row col-md-3" align="end">
                         {% if todo.is_completed %}
                         <span class="label label-default">Completed</span>
                         <span class="label label-default">{{ todo.due_date }}</span>
