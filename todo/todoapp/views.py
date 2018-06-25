@@ -19,14 +19,20 @@ from django.views.decorators.csrf import csrf_exempt
 @login_required
 def home(request):
     filter_type = request.GET.get("filter", "")
+    today = datetime.date.today()
+    start_week =  today - datetime.timedelta(today.weekday())
+    end_week = start_week + datetime.timedelta(6)
+    start_nextweek =  end_week + datetime.timedelta(1)
+    end_nextweek = start_nextweek + datetime.timedelta(6)
+
     if filter_type == "today":
-        todo_list = Task.objects.filter(user=request.user, is_deleted=False, due_date=datetime.date.today())
+        todo_list = Task.objects.filter(user=request.user, is_deleted=False, due_date=today)
     elif filter_type == "this_week":
-        todo_list = Task.objects.filter(user=request.user, is_deleted=False, due_date=datetime.date.today())
+        todo_list = Task.objects.filter(user=request.user, is_deleted=False, due_date__range=[start_week, end_week])
     elif filter_type == "next_week":
-        todo_list = Task.objects.filter(user=request.user, is_deleted=False, due_date=datetime.date.today())
+        todo_list = Task.objects.filter(user=request.user, is_deleted=False, due_date__range=[start_nextweek, end_nextweek])
     elif filter_type == "overdue":
-        todo_list = Task.objects.filter(user=request.user, is_deleted=False, is_completed=False)
+        todo_list = Task.objects.filter(user=request.user, is_deleted=False, is_completed=False, due_date__lt=today)
     else:
         todo_list = Task.objects.filter(user=request.user, is_deleted=False)
     
