@@ -5,9 +5,6 @@ from django.urls import reverse
 
 from django.contrib.auth.decorators import login_required
 
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login, authenticate
-
 from .models import Task, SubTask
 import datetime
 from dateutil import parser as date_parser
@@ -74,13 +71,13 @@ def mark_task(request):
             response_dict["status"] = "FAIL"
             response_dict["error"] = "TASK_DOES_NOT_EXIST"
         else:
-            is_completed = request.POST.get("is_completed","FALSE")
+            is_completed = request.POST.get("is_completed", "FALSE")
             # print(type(is_completed)) --> always str
             # print(is_completed) 
             if is_completed=="TRUE" and not task.is_completed:
-                task.is_completed = True
+                task.mark_complete()
             else:
-                task.is_completed = False
+                task.mark_pending()
             task.save()
             response_dict["status"] = "OK"
     else:
@@ -137,4 +134,29 @@ def delete_task(request):
         response_dict["status"] = "FAIL"
         response_dict["error"] = "BAD_METHOD"
     return HttpResponse(json.dumps(response_dict))
-        
+
+
+from django.utils.decorators import method_decorator
+from django.views.generic import View
+from django.contrib.auth.decorators import login_required
+
+# the decorator will be passed to / applied over the 'dispatch' function of the class.
+# dispatch() handles request when .as_view() is called upon CBVs
+@method_decorator(decorator=login_required, name='dispatch')
+class TaskView(View):
+
+    # show details of a task
+    def get(self, request, *args, **kwargs):
+        return HttpResponse(request.method)
+
+    # add a new task
+    def post(self, request, *args, **kwargs):
+        return HttpResponse(request.method)
+
+    # update a task
+    def put(self, request, *args, **kwargs):
+        return HttpResponse(request.method)
+
+    # delete a task
+    def delete(self, request, *args, **kwargs):
+        return HttpResponse(request.method)
