@@ -22,8 +22,8 @@ def home(request):
     start_nextweek =  end_week + datetime.timedelta(1)
     end_nextweek = start_nextweek + datetime.timedelta(6)
 
-    if filter_type == "today":
-        todo_list = Task.objects.filter(user=request.user, is_deleted=False, due_date=today)
+    if filter_type == "All":
+        todo_list = Task.objects.filter(user=request.user, is_deleted=False)
     elif filter_type == "this_week":
         todo_list = Task.objects.filter(user=request.user, is_deleted=False, due_date__range=[start_week, end_week])
     elif filter_type == "next_week":
@@ -31,8 +31,8 @@ def home(request):
     elif filter_type == "overdue":
         todo_list = Task.objects.filter(user=request.user, is_deleted=False, is_completed=False, due_date__lt=today)
     else:
-        todo_list = Task.objects.filter(user=request.user, is_deleted=False)
-    
+        todo_list = Task.objects.filter(user=request.user, is_deleted=False, due_date=today)
+
     context = {
         'title': 'Todo-App',
         'todo_list': todo_list
@@ -47,7 +47,7 @@ def add_task(request):
     if request.method == "POST":
         title = request.POST.get("title","NO_TITLE")
         due_date = request.POST.get("due_date", str(datetime.date.today()))
-        # due_date = date_parser.parse(due_date) 
+        # due_date = date_parser.parse(due_date)
         due_date = due_date.split("GMT")[0]
         due_date = datetime.datetime.strptime(due_date.strip(), "%a %b %d %Y %H:%M:%S")
         #print(type(due_date))
@@ -73,7 +73,7 @@ def mark_task(request):
         else:
             is_completed = request.POST.get("is_completed", "FALSE")
             # print(type(is_completed)) --> always str
-            # print(is_completed) 
+            # print(is_completed)
             if is_completed=="TRUE" and not task.is_completed:
                 task.mark_complete()
             else:
@@ -115,7 +115,7 @@ def add_sub_task(request):
         response_dict["status"] = "FAIL"
         response_dict["error"] = "BAD_METHOD"
     return HttpResponse(json.dumps(response_dict))
-            
+
 
 @login_required
 def delete_task(request):
