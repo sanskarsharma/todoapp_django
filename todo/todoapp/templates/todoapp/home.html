@@ -23,7 +23,7 @@
 
             <div class="dropdown">
                     <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" >
-                        <span id="dropdown_text" type= "text"></span> 
+                        <span id="dropdown_text" type= "text"></span>
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
@@ -63,11 +63,11 @@
                     <div class="col-md-8 panel2" id="hey{{forloop.counter}}_title">
                        <h4 class="panel-title"  >
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{forloop.counter}}"  {% if todo.is_completed %} style="color:#807e7eda;" {% endif %}   >
-                            <strong>{{ todo.title }}</strong>                              
+                            <strong>{{ todo.title }}</strong>
                         </a>
-                        
+
                        </h4>
-                        
+
                     </div>
                     <div class="col-md-1">
                         {% if todo.subtask_set.all %}
@@ -107,7 +107,7 @@
                     Task Done. <a class="marktask" id="undone_{{todo.id}}" href="#">Mark as Pending</a>
                     {% endif %}
                     <button class="btn btn-danger deletetask" id="{{todo.id}}"><i class="fa fa-trash" aria-hidden="true" style="font-size:18px;"></i></button>
-                    
+
 
                 </div>
 
@@ -222,7 +222,7 @@
 
                     <p>Sub-tasks :</p>
                     <div class="input_fields_wrap">
-                        <input type="text" name="answer[]" class="field-long form-control" placeholder="Enter sub-task ..." maxlength="198"/>
+                        <input type="text" name="answer[]" class="field-long form-control" placeholder="Enter sub-task ..." maxlength="198" style="margin-bottom: 4px;"/>
                     </div>
 
                     <br>

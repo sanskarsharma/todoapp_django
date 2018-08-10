@@ -81,13 +81,13 @@
 
             var storedValue = sessionStorage.getItem('dropdownselected') || 'All';
             document.getElementById("dropdown_text").innerHTML = storedValue;
-            
+
 
             $(".dropdown-item").click(function(){
                 console.log("dropdown clickEEEEEEEEEDDD");
                 var text = $(this).text();
                 console.log(text);
-                
+
                 sessionStorage.setItem('dropdownselected', text );
 
                 // if(text== "All"){
@@ -97,7 +97,7 @@
                 //     window.location.href = window.location.href.replace( /[\?#].*|$/, "?filter="+text );
                 //     //location.reload();
                 // }
-                
+
 
             });
 
@@ -281,7 +281,7 @@
 
                 var view_id = $(this).attr("id")
                 console.log("MARK TASK VIEW ID "+ view_id)
-                
+
                 var action = view_id.split("_")[0]
                 var task_id = view_id.split("_")[1]
                 console.log("MARK TASK ID "+ task_id)
@@ -290,7 +290,7 @@
                 if(action=="done"){
                     is_completed = "TRUE"
                 }
-                
+
 
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
@@ -319,7 +319,7 @@
                                 }
                             });
                         }
-                        
+
                     }
 
                 }
@@ -341,7 +341,7 @@
             });
 
             var max_fields      = 10;
-            var wrapper         = $(".input_fields_wrap"); 
+            var wrapper         = $(".input_fields_wrap");
             var add_button      = $(".add_field_button");
             var remove_button   = $(".remove_field_button");
             var submit_button   = $("#add_sub_task_submit");
@@ -349,17 +349,20 @@
             $(add_button).click(function(e){
                 e.preventDefault();
                 var total_fields = wrapper[0].childNodes.length;
-                var row = '<input type="text" name="answer[]" class="field-long form-control" placeholder="Enter sub-task ..." maxlength="198" />';
+                var row = '<input type="text" name="answer[]" class="field-long form-control" placeholder="Enter sub-task ..." maxlength="198" style="margin-bottom: 4px;" />';
                 if(total_fields < max_fields){
                     $(wrapper).append(row);
                 }
+                console.log(wrapper[0].childNodes.length);
+
             });
             $(remove_button).click(function(e){
                 e.preventDefault();
                 var total_fields = wrapper[0].childNodes.length;
-                if(total_fields>1){
+                if(total_fields>3){
                     wrapper[0].childNodes[total_fields-1].remove();
                 }
+                console.log(wrapper[0].childNodes);
             });
 
             $(submit_button).click(function(){
@@ -413,7 +416,7 @@
                 }
                 else{
                     console.log("WRAAAAAAAAAANG");
-                    
+
                 }
             });
 
@@ -448,14 +451,14 @@
 <div id="modal_about_app" class="modal fade" >
         <div class="modal-dialog">
                 <div class="modal-content">
-    
-    
-    
+
+
+
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h4 class="modal-title">About this app</h4>
                     </div>
-    
+
                     <div class="modal-body">
 
                         This is a simple webapp for making to-do lists.
@@ -465,20 +468,20 @@
                         <br>
                         Its an open-source project, with source code available on github. <br>
                         Developer profiles : <a href="https://github.com/sanskarsharma">Github</a>, <a href="https://linkedin.com/in/sanskarssh">LinkedIn</a>, <a href="https://www.hackerearth.com/@sanskarsharma">Hackerearth</a>
-                        
-    
+
+
                     </div>
-    
+
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" onclick="location.href='https://github.com/sanskarsharma/todoapp_django'" type="button" data-toggle="a" data-target="https://github.com/sanskarsharma/todoapp_django" href="https://github.com/sanskarsharma/todoapp_django">Visit Repositoty</button>
+                        <button type="button" class="btn btn-success" onclick="location.href='https://github.com/sanskarsharma/todoapp_django'" type="button" data-toggle="a" data-target="https://github.com/sanskarsharma/todoapp_django" href="https://github.com/sanskarsharma/todoapp_django">Visit Repository</button>
                     </div>
-    
-    
+
+
                 </div>
-    
+
         </div>
     </div>
-    
+
 
 
 
